@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap");
+* {
+  user-select: none;
+  font-family: "Roboto Condensed", serif;
+  margin:0;
+  padding:0;
+}
+.screen-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .game-container {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgb(195, 195, 195);
+    padding: 10px;
+    gap: 12px;
+    border-radius: 5px;
+    .tile-block {
+      background-color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        font-size: 50px;
+        color: white;
+        font-weight: 500;
+      }
+    }
+  }
+}
