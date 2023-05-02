@@ -10,7 +10,6 @@ const Home = () => {
 
   useEffect(() => {
     board.init([tiles, updateTiles]);
-    console.log(board.tiles);
     board.addFirstRandom();
 
     window.addEventListener("keydown", (evt) => {

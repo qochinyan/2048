@@ -4,7 +4,6 @@ import { useState } from "react";
 export default class Board {
   private _setTiles: React.Dispatch<React.SetStateAction<Tile[][]>>;
   tiles: Tile[][];
-  lastTiles: Tile[][];
   move: Boolean = true;
 
   constructor(readonly size: number = 16) {}
@@ -14,7 +13,6 @@ export default class Board {
   };
 
   setTiles(tiles: Tile[][]) {
-    this.lastTiles = [...this.tiles];
     this.tiles = tiles;
     this._setTiles(tiles);
   }
@@ -29,6 +27,13 @@ export default class Board {
         if (index === j.index) return j;
       }
     }
+  }
+  afterMove(move: boolean, newTiles: Tile[][]) {
+    this.setMove(move);
+    this.setTiles(newTiles);
+    if (this.move && !this.areTilesFull()) {
+      this.asyncRandomAdd();
+    } 
   }
   // top
   moveTilesToTop: () => void = () => {
@@ -59,11 +64,7 @@ export default class Board {
         }
       }
     }
-    this.setMove(move);
-    this.setTiles(newTiles);
-    if (this.move) {
-      this.asyncRandomAdd();
-    }
+    this.afterMove(move, newTiles);
   };
   // bottom
   moveTilesToBottom: () => void = () => {
@@ -95,11 +96,7 @@ export default class Board {
         }
       }
     }
-    this.setMove(move);
-    this.setTiles(newTiles);
-    if (this.move) {
-      this.asyncRandomAdd();
-    }
+    this.afterMove(move, newTiles);
   };
   // right
   moveTilesToRight: () => void = () => {
@@ -131,11 +128,7 @@ export default class Board {
         }
       }
     }
-    this.setMove(move);
-    this.setTiles(newTiles);
-    if (this.move) {
-      this.asyncRandomAdd();
-    }
+    this.afterMove(move, newTiles);
   };
   // left
   moveTilesToLeft: () => void = () => {
@@ -167,11 +160,7 @@ export default class Board {
         }
       }
     }
-    this.setMove(move);
-    this.setTiles(newTiles);
-    if (this.move) {
-      this.asyncRandomAdd();
-    }
+    this.afterMove(move, newTiles);
   };
   asyncRandomAdd = (ms?: number) => {
     new Promise((res) => {
@@ -227,6 +216,9 @@ export default class Board {
         return;
       }
     });
+    if (this.areTilesFull() && this.isGameOver()) {
+      console.log("Game Over Lox");
+    }
     return;
   }
 
@@ -255,6 +247,33 @@ export default class Board {
       tiles.push(rowArray);
     }
     this.setTiles(tiles);
-    this.lastTiles = [...this.tiles];
+  }
+  areTilesFull() {
+    let are: boolean = true;
+    this.loop((tile) => {
+      if (tile.isEmpty()) {
+        are = false;
+        return;
+      }
+    });
+    return are;
+  }
+  isGameOver(): boolean {
+    let tiles = this.tiles;
+    for (let i = 0; i < tiles.length; i++) {
+      for (let j = 0; j < tiles.length - 1; j++) {
+        if (tiles[i][j].value === tiles[i][j + 1].value) {
+          return false;
+        }
+      }
+    }
+    for (let i = 0; i < tiles.length; i++) {
+      for (let j = 0; j < tiles.length - 1; j++) {
+        if (tiles[j][i].value === tiles[j + 1][i].value) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }
