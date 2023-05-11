@@ -28,16 +28,16 @@ export default class Board {
       }
     }
   }
-  afterMove(move: boolean, newTiles: Tile[][]) {
+  afterMove(move: boolean, newTiles: Tile[][], add?: boolean) {
     this.setMove(move);
     this.setTiles(newTiles);
-    if (this.move && !this.areTilesFull()) {
+    if ((add || move) && !this.areTilesFull()) {
       this.asyncRandomAdd();
-    } 
+    }
   }
   // top
-  moveTilesToTop: () => void = () => {
-    let newTiles: Tile[][] = [...this.tiles];
+  moveTilesToTop = (newTiles2?: Tile[][], add?: boolean) => {
+    let newTiles: Tile[][] = newTiles2 ?? [...this.tiles];
     let move = false;
     for (let i = 0; i < newTiles.length; i++) {
       let plus = 0;
@@ -60,15 +60,19 @@ export default class Board {
             plus++;
             isFinished = false;
             move = true;
+            if (!newTiles2) {
+              this.moveTilesToTop(newTiles, true);
+              return;
+            }
           }
         }
       }
     }
-    this.afterMove(move, newTiles);
+    this.afterMove(move, newTiles, add);
   };
   // bottom
-  moveTilesToBottom: () => void = () => {
-    let newTiles: Tile[][] = [...this.tiles];
+  moveTilesToBottom = (newTiles2?: Tile[][], add?: boolean) => {
+    let newTiles: Tile[][] = newTiles2 ?? [...this.tiles];
     let move = false;
     for (let i = 0; i < newTiles.length; i++) {
       let plus = 0;
@@ -92,15 +96,19 @@ export default class Board {
             plus++;
             isFinished = false;
             move = true;
+            if (!newTiles2) {
+              this.moveTilesToBottom(newTiles, true);
+              return;
+            }
           }
         }
       }
     }
-    this.afterMove(move, newTiles);
+    this.afterMove(move, newTiles, add);
   };
   // right
-  moveTilesToRight: () => void = () => {
-    let newTiles: Tile[][] = [...this.tiles];
+  moveTilesToRight = (newTiles2?: Tile[][], add?: boolean) => {
+    let newTiles: Tile[][] = newTiles2 ?? [...this.tiles];
     let move: boolean = false;
     for (let i = 0; i < newTiles.length; i++) {
       let plus = 0;
@@ -124,15 +132,20 @@ export default class Board {
             plus++;
             isFinished = false;
             move = true;
+            if (!newTiles2) {
+              this.moveTilesToRight(newTiles, true);
+              return;
+            }
           }
         }
       }
     }
-    this.afterMove(move, newTiles);
+    this.afterMove(move, newTiles, add);
   };
   // left
-  moveTilesToLeft: () => void = () => {
-    let newTiles: Tile[][] = [...this.tiles];
+  moveTilesToLeft = (newTiles2?: Tile[][], add?: boolean) => {
+    let newTiles: Tile[][] = newTiles2 ?? [...this.tiles];
+
     let move: boolean = false;
 
     for (let i = 0; i < newTiles.length; i++) {
@@ -156,11 +169,15 @@ export default class Board {
             plus++;
             isFinished = false;
             move = true;
+            if (!newTiles2) {
+              this.moveTilesToLeft(newTiles, true);
+              return;
+            }
           }
         }
       }
     }
-    this.afterMove(move, newTiles);
+    this.afterMove(move, newTiles, add);
   };
   asyncRandomAdd = (ms?: number) => {
     new Promise((res) => {
